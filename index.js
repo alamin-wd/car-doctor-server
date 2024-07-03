@@ -27,6 +27,7 @@ async function run() {
         await client.connect();
 
         const serviceCollection = client.db('carDoctorDB').collection('services');
+        const orderCollection = client.db('carDoctorDB').collection('orders');
 
         // Get all Services
         app.get('/services', async (req, res) => {
@@ -42,8 +43,16 @@ async function run() {
             const options = {
                 projection: { title: 1, img: 1, price: 1, description: 1, service_id: 1, facility: 1 }
             }
+            // options is optional
             const result = await serviceCollection.findOne(query, options);
+            res.send(result);
+        })
 
+        // Orders
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+
+            const result = await orderCollection.insertOne(order);
             res.send(result);
         })
 
